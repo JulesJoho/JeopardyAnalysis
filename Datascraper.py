@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import pandas
+from datetime import date as dt
 
 class clue:
 
@@ -60,7 +61,7 @@ class clue:
 
     def makelist(self):
 
-        return [self.category, self.hint, self.answer, self.value, self.jtype, self.media, self.DD, self.date, self.game_name, "", "", ""]
+        return [self.category, self.hint, self.answer, self.value, self.jtype, self.media, self.DD, dt.fromisoformat(self.date), self.game_name, "", "", ""]
 
 
 #Takes in a board, which is a string of html code, and returns only the useful lines

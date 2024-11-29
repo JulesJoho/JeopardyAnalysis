@@ -2,7 +2,7 @@
 # specifically for this project.
 import Datascraper as ds
 import pandas as pd
-import datetime as dt
+from datetime import date as dt
 
 pd.set_option('display.max_rows', 1000)
 
@@ -202,7 +202,7 @@ while True:
                 correct, subjects = question_asker(df.iloc[i])
                 df.at[i, "correct"] = correct
                 df.at[i, "subjects"] = subjects
-                df.at[i, "date_answered"] = dt.date.today()
+                df.at[i, "date_answered"] = dt.today()
                 adf.loc[len(adf.index)] = df.iloc[i]
 
                 counter += 1
@@ -239,7 +239,7 @@ while True:
                     correct, subjects = question_asker(df.iloc[i])
                     df.at[i, "correct"] = correct
                     df.at[i, "subjects"] = subjects
-                    df.at[i, "date_answered"] = date.today()
+                    df.at[i, "date_answered"] = dt.today()
                     adf.loc[len(adf.index)] = df.iloc[i]
 
                 found = True
@@ -255,16 +255,22 @@ while True:
 
     if userinput == "response_frequencies":
 
-        end_date = input("What is the end date you would like to consider? If you would like to use the present, "
-                           "enter anything besides a date\n")
+        end_date = input("What is the end date you would like to consider? Enter date as YYYY-MM-DD. If you would like to use the present, "
+                           "enter anything besides a date. \n")
 
-        if not bool(dt.strptime(end_date, "%Y-%m-%d")):
-            lower_date = df.iloc[0]["date"]
+        try:
+            end_date = dt.fromisoformat(end_date)
+        except:
+            end_date = dt.today()
+
 
         start_date = input("What is the lower date you would like to consider? If you would like to use the begining of"
                            "the show, enter anything besides a date\n")
-        if not bool(datetime.strptime(start_date, "%Y-%m-%d")):
-            lower_date = "1984-09-10"
+
+        try:
+            start_date = dt.fromisoformat(start_date)
+        except:
+            start_date = dt.fromisoformat("1984-09-10")
 
         mask = (df['date'] > start_date) & (df['date'] <= end_date)
 
