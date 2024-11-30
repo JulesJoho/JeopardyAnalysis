@@ -88,15 +88,16 @@ def bootup_menu():
             if choice == "1":
                 return "response_frequencies"
             else:
-                print("Not a vailid answer")
+                print("Not a valid answer")
 
         if choice == "4":
 
             print("Which of the following options would you like to do?")
             print("1) Create new abbreviated dataframe.")
             print("2) Organize abbreviated dataframe.")
-            print("3) delete user input")
-            print("4) remove duplicates")
+            print("3) Delete user input")
+            print("4) Remove duplicates")
+            print("5) Convert dates to date object")
             choice = input("")
 
             # The abbreviated dataframe is saved as abvjeopardydata.csv. It consists of only the rows of
@@ -120,6 +121,8 @@ def bootup_menu():
 
             if choice == "4":
                 return "remove_duplicates"
+            if choice == "5":
+                return "convert_dates"
 
             else:
                 print("Enter a relevant number")
@@ -305,3 +308,17 @@ while True:
         df.to_csv('jeopardydata.csv', index=False)
         adf.to_csv('abvjeopardydata.csv', index=False)
 
+    #
+    if userinput == "convert_dates":
+        for i in range(len(df)):
+            if i % 10000 == 0:
+                print(i)
+            df.at[i, 'date'] = dt.fromisoformat(df.at[i, 'date'])
+
+        for i in range(len(adf)):
+            if i % 10000 == 0:
+                print(i)
+            adf.at[i, 'date'] = dt.fromisoformat(adf.at[i, 'date'])
+
+        df.to_csv('jeopardydata.csv', index=False)
+        adf.to_csv('abvjeopardydata.csv', index=False)
