@@ -86,7 +86,17 @@ def bootup_menu():
             print("1) What are the most common correct responses to Jeopardy! questions?")
             choice = input("")
             if choice == "1":
-                return "response_frequencies"
+                print("Would you like to split results by point value?")
+                print("1) Yes")
+                print("2) No")
+                while True:
+                    choice = input("")
+                    if choice == "1":
+                        return "response_frequencies_by_value"
+                    elif choice == "2":
+                        return "response_frequencies"
+                    else:
+                        print("Please print either 1 or 2")
             else:
                 print("Not a valid answer")
 
@@ -256,7 +266,7 @@ while True:
             df.to_csv('jeopardydata.csv', index=False)
             adf.to_csv('abvjeopardydata.csv', index=False)
 
-    if userinput == "response_frequencies":
+    if (userinput == "response_frequencies") or (userinput == "response_frequencies_by_value"):
 
         end_date = input("What is the end date you would like to consider? Enter date as YYYY-MM-DD. If you would like to use the present, "
                            "enter anything besides a date. \n")
@@ -268,7 +278,7 @@ while True:
 
 
         start_date = input("What is the lower date you would like to consider? If you would like to use the begining of"
-                           "the show, enter anything besides a date\n")
+                           " the show, enter anything besides a date\n")
 
         try:
             start_date = dt.fromisoformat(start_date)
@@ -277,11 +287,64 @@ while True:
 
         mask = (df['date'] > start_date) & (df['date'] <= end_date)
 
+        if userinput == "response_frequencies":
 
-        index = df.loc[mask]["answer"].value_counts()
-        print(index.head(500))
+            index = df.loc[mask]["answer"].value_counts()
+            print(index.head(500))
 
-        index.to_csv('index.csv', index=True)
+            index.to_csv('index.csv', index=True)
+
+        elif (userinput == "response_frequencies_by_value"):
+
+            dfm = df.loc[mask]
+
+            print("working1")
+
+            df1 = dfm.loc[df["jtype"] == 1]
+            df11 = df1.loc[df1["value"] == 200]
+            df12 = df1.loc[df1["value"] == 400]
+            df13 = df1.loc[df1["value"] == 600]
+            df14 = df1.loc[df1["value"] == 800]
+            df15 = df1.loc[df1["value"] == 1000]
+
+            df2 = dfm.loc[df["jtype"] == 2]
+            df21 = df2.loc[df2["value"] == 400]
+            df22 = df2.loc[df2["value"] == 800]
+            df23 = df2.loc[df2["value"] == 1200]
+            df24 = df2.loc[df2["value"] == 1600]
+            df25 = df2.loc[df2["value"] == 2000]
+
+            print("working2")
+
+            index11 = df11["answer"].value_counts()
+            index11.rename(columns={"answer": "200", "count": "count"})
+            index12 = df12["answer"].value_counts()
+            index12.rename(columns={"answer": "400", "count": "count"})
+            index13 = df13["answer"].value_counts()
+            index13.rename(columns={"answer": "600", "count": "count"})
+            index14 = df14["answer"].value_counts()
+            index14.rename(columns={"answer": "800", "count": "count"})
+            index15 = df15["answer"].value_counts()
+            index15.rename(columns={"answer": "1000", "count": "count"})
+
+            index21 = df21["answer"].value_counts()
+            index21.rename(columns={"answer": "400", "count": "count"})
+            index22 = df22["answer"].value_counts()
+            index22.rename(columns={"answer": "800", "count": "count"})
+            index23 = df23["answer"].value_counts()
+            index23.rename(columns={"answer": "1200", "count": "count"})
+            index24 = df24["answer"].value_counts()
+            index24.rename(columns={"answer": "1600", "count": "count"})
+            index25 = df25["answer"].value_counts()
+            index25.rename(columns={"answer": "2000", "count": "count"})
+
+            print("working3")
+
+            index1 = pd.concat([index11, index12, index13, index14, index15], axis=1)
+            index1.to_csv('index1.csv', index=True)
+
+            index2 = pd.concat([index21, index22, index23, index24, index25], axis=1)
+            index2.to_csv('index2.csv', index=True)
 
 
     # The abbreviated dataframe is saved as abvjeopardydata.csv. It consists of only the rows of jeopardydata.csv
@@ -313,12 +376,18 @@ while True:
         for i in range(len(df)):
             if i % 10000 == 0:
                 print(i)
-            df.at[i, 'date'] = dt.fromisoformat(df.at[i, 'date'])
+            try:
+                df.at[i, 'date'] = dt.fromisoformat(df.at[i, 'date'])
+            except:
+                break
 
         for i in range(len(adf)):
             if i % 10000 == 0:
                 print(i)
-            adf.at[i, 'date'] = dt.fromisoformat(adf.at[i, 'date'])
+            try:
+                adf.at[i, 'date'] = dt.fromisoformat(adf.at[i, 'date'])
+            except:
+                break
 
         df.to_csv('jeopardydata.csv', index=False)
         adf.to_csv('abvjeopardydata.csv', index=False)
