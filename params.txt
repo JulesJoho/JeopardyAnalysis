@@ -1,0 +1,1 @@
+topics = {'a':'medicine', 'b':'brands', 'c':'current events', 'd':'theatre', 'e':'econ', 'f':'movies', 'g':'geography', 'h':'history', 'i':'pop culture', 'j':'fashion', 'l':'languages', 'm':'music', 'n':'literature', 'o':'other', 'p':'poetry', 'r':'mythology', 's':'science', 't':'television', 'u':'universities', 'v':'art', 'w':'wordplay', 'y':'food', 'z':'sports'}
